@@ -1,6 +1,6 @@
 <!-- heading -->
 # NBA Teams
-Visit the application at [https://63b4a98bdb9107506b01f060--amazing-alfajores-033517.netlify.app/](https://63b4a98bdb9107506b01f060--amazing-alfajores-033517.netlify.app/)
+Visit the application at [https://amazing-alfajores-033517.netlify.app/](https://amazing-alfajores-033517.netlify.app/)
 
 This project is a simple application that displays a list of NBA teams in tabular format and their details. You can search for a specific team, view details about a team, and see a random game from that team's 2021 season.
 
