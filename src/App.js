@@ -1,8 +1,8 @@
 import React from "react";
 import { Container } from "react-bootstrap";
+import SearchBar from "./components/SearchBar/SearchBar";
+import DataTable from "./components/DataTable/DataTable";
 import "./App.css";
-import SearchBar from "./components/SearchBar";
-import DataTable from "./components/DataTable";
 
 function App() {
   const [searchQuery, setSearchQuery] = React.useState("");

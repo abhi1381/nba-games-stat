@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+<!-- heading -->
+# NBA Teams
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a simple application that displays a list of NBA teams in tabular format and their details. You can search for a specific team, view details about a team, and see a random game from that team's 2021 season.
 
-## Available Scripts
+<!-- bulleted list -->
+## Features
 
-In the project directory, you can run:
+- Display a list of NBA teams
+- Search for a specific team by name
+- View details about a team, including their full name, total games played in 2021, and a random game from their 2021 season
+- Close the team details panel
+- Sort the table by columns
+- Paginated table
 
-### `npm start`
+## Getting Started
+1. Clone the repository - `git clone https://github.com/abhi1381/nba-games-stat.git`
+2. Run `npm install` to install the dependencies
+3. Run `npm start` to start the development server
+4. Open http://localhost:3000 in your browser to view the application
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Testing
+This project uses `Cypress` for unit testing.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+To run the tests, run:
+```bash
+# To run the Cypress tests, run npm run cypress:open to open the Cypress test runner.
+npm run test
+```
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+## Linting
+This project uses `ESLint` for linting.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To lint the code, run:
+```bash
+npm run lint
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Built With
+- **React** - JavaScript library for building user interfaces
+- **React Bootstrap** - Bootstrap components built with React
+- **Cypress** - Unit testing framework
+- **ESLint** - JavaScript linter
+- **Lodash/sortBy** - JavaScript utility library
 
-### `npm run eject`
+## API
+Data is fetched from the [Ball Don't Lie API](https://www.balldontlie.io/#introduction).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Folder Structure
+```
+nba-games-stat
+├── cypress - contains the Cypress configuration
+│   ├── fixtures
+│   └── support
+├── public
+└── src
+    ├── components - contains the React components with their respective unit tests
+    │── App.css
+    ├── App.js - contains the main Root React component
+    ├── index.css
+    ├── index.js
+    ├── reportWebVitals.js
+├── .eslintrc.js - contains the ESLint configuration
+├── .gitignore
+├── cypress.config.js - contains the Cypress configuration
+├── package.json
+├── package-lock.json
+└── README.md
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Author
+Abhishek Tiwari

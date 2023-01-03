@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Table, Pagination, Col } from "react-bootstrap";
-import SideDrawer from "./SideDrawer";
+import orderBy from "lodash.orderby";
+import SideDrawer from "../SideDrawer/SideDrawer";
 
 const TEAMS_API_URL = "https://www.balldontlie.io/api/v1/teams";
 const GAMES_API_URL = "https://www.balldontlie.io/api/v1/games";
 
 function DataTable({ searchQuery }) {
   const [teams, setTeams] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTeamId, setSelectedTeamId] = useState(null);
   const [selectedTeamGame, setSelectedTeamGame] = useState([]);
@@ -16,23 +18,41 @@ function DataTable({ searchQuery }) {
   const teamsPerPage = 10;
 
   useEffect(() => {
-    fetch(`${TEAMS_API_URL}?page=${currentPage}&per_page=${teamsPerPage}`)
-      .then((response) => response.json())
-      .then((data) => setTeams(data.data))
-      .catch((error) => console.log(error));
+    const fetchTeams = async () => {
+      try {
+        const response = await fetch(
+          `${TEAMS_API_URL}?page=${currentPage}&per_page=${teamsPerPage}`
+        );
+        const data = await response.json();
+        setTeams(data.data);
+        setTotalPages(data.meta.total_pages);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    };
+    fetchTeams();
   }, [currentPage]);
 
   useEffect(() => {
+    const fetchTeamGame = async () => {
+      try {
+        const response = await fetch(
+          `${GAMES_API_URL}?team_ids[]=${selectedTeamId}&seasons[]=2021`
+        );
+        const data = await response.json();
+        setSelectedTeamGame({
+          ...data.data[Math.floor(Math.random() * data.data.length)],
+          total_games: data.meta.total_count,
+        });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    };
+
     if (selectedTeamId) {
-      fetch(`${GAMES_API_URL}?team_ids[]=${selectedTeamId}&seasons[]=2021`)
-        .then((response) => response.json())
-        .then((data) =>
-          setSelectedTeamGame({
-            ...data.data[Math.floor(Math.random() * data.data.length)],
-            total_games: data.meta.total_count,
-          })
-        )
-        .catch((error) => console.log(error));
+      fetchTeamGame();
     }
   }, [selectedTeamId]);
 
@@ -50,7 +70,7 @@ function DataTable({ searchQuery }) {
     setSelectedTeamId(null);
   };
 
-  const getFilteredTeams = () => {
+  const getFilteredTeams = useMemo(() => {
     let filteredTeams = teams;
 
     if (searchQuery.length > 1) {
@@ -59,50 +79,25 @@ function DataTable({ searchQuery }) {
       );
     }
 
-    if (sortBy === "name") {
-      filteredTeams.sort((a, b) => {
-        if (a.name < b.name) {
-          return sortDirection === "asc" ? -1 : 1;
-        }
-        if (a.name > b.name) {
-          return sortDirection === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
-    } else if (sortBy === "city") {
-      filteredTeams.sort((a, b) => {
-        if (a.city < b.city) {
-          return sortDirection === "asc" ? -1 : 1;
-        }
-        if (a.city > b.city) {
-          return sortDirection === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
-    } else if (sortBy === "conference") {
-      filteredTeams.sort((a, b) => {
-        if (a.conference < b.conference) {
-          return sortDirection === "asc" ? -1 : 1;
-        }
-        if (a.conference > b.conference) {
-          return sortDirection === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
-    } else if (sortBy === "division") {
-      filteredTeams.sort((a, b) => {
-        if (a.division < b.division) {
-          return sortDirection === "asc" ? -1 : 1;
-        }
-        if (a.division > b.division) {
-          return sortDirection === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
+    switch (sortBy) {
+      case "name":
+        filteredTeams = orderBy(filteredTeams, "name", sortDirection);
+        break;
+      case "city":
+        filteredTeams = orderBy(filteredTeams, "city", sortDirection);
+        break;
+      case "conference":
+        filteredTeams = orderBy(filteredTeams, "conference", sortDirection);
+        break;
+      case "division":
+        filteredTeams = orderBy(filteredTeams, "division", sortDirection);
+        break;
+      default:
+        break;
     }
 
     return filteredTeams;
-  };
+  }, [teams, searchQuery, sortBy, sortDirection]);
 
   const handleSort = (column) => {
     if (sortBy === column) {
@@ -214,7 +209,7 @@ function DataTable({ searchQuery }) {
           </tr>
         </thead>
         <tbody>
-          {getFilteredTeams().map((team) => (
+          {getFilteredTeams.map((team) => (
             <tr
               key={team.id}
               onClick={() => handleTeamClick(team.id)}
@@ -231,24 +226,16 @@ function DataTable({ searchQuery }) {
       </Table>
       <Pagination className="pagination-container">
         <Pagination.Prev onClick={() => setCurrentPage(currentPage - 1)} />
-        <Pagination.Item
-          active={currentPage === 1}
-          onClick={() => handlePageChange(1)}
-        >
-          1
-        </Pagination.Item>
-        <Pagination.Item
-          active={currentPage === 2}
-          onClick={() => handlePageChange(2)}
-        >
-          2
-        </Pagination.Item>
-        <Pagination.Item
-          active={currentPage === 3}
-          onClick={() => handlePageChange(3)}
-        >
-          3
-        </Pagination.Item>
+        {Array.from({ length: totalPages }).map((_, i) => (
+          <Pagination.Item
+            // eslint-disable-next-line react/no-array-index-key
+            key={i + 1}
+            active={i + 1 === currentPage}
+            onClick={() => handlePageChange(i + 1)}
+          >
+            {i + 1}
+          </Pagination.Item>
+        ))}
         <Pagination.Next onClick={() => setCurrentPage(currentPage + 1)} />
       </Pagination>
       {selectedTeamGame?.id ? (
