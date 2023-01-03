@@ -20,6 +20,40 @@ function SideDrawer({
 
   const formattedDate = date?.split("T")[0];
 
+  const teamDetailRows = [
+    {
+      label: "Team Full Name",
+      value: teamFullName,
+    },
+    {
+      label: "Total Games in 2021",
+      value: totalGames,
+    },
+    {
+      label: "Random Game Details:",
+    },
+    {
+      label: "Date",
+      value: formattedDate,
+    },
+    {
+      label: "Home Team",
+      value: teamFullName,
+    },
+    {
+      label: "Home Team Score",
+      value: homeTeamScore,
+    },
+    {
+      label: "Visitor Team",
+      value: visitorTeamName,
+    },
+    {
+      label: "Visitor Team Score",
+      value: visitorTeamScore,
+    },
+  ];
+
   return (
     <Offcanvas
       show={showTeamDetails}
@@ -31,59 +65,23 @@ function SideDrawer({
         <Offcanvas.Title>{teamName}</Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <Row>
-          <Col xs="6">Team Full Name</Col>
-          <Col xs="6">{teamFullName}</Col>
-        </Row>
-        <Row>
-          <Col xs="6">Total Games in 2021</Col>
-          <Col xs="6">{totalGames}</Col>
-        </Row>
-        <Row>
-          <Col xs="10" className="bold">
-            Random Game Details:
-          </Col>
-        </Row>
-        <Row>
-          <Col xs="6" className="bold">
-            Date
-          </Col>
-          <Col xs="6" className="bold">
-            {formattedDate}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs="6" className="bold">
-            Home Team
-          </Col>
-          <Col xs="6" className="bold">
-            {teamFullName}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs="6" className="bold">
-            Home Team Score
-          </Col>
-          <Col xs="6" className="bold">
-            {homeTeamScore}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs="6" className="bold">
-            Visitor Team
-          </Col>
-          <Col xs="6" className="bold">
-            {visitorTeamName}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs="6" className="bold">
-            Visitor Team Score
-          </Col>
-          <Col xs="6" className="bold">
-            {visitorTeamScore}
-          </Col>
-        </Row>
+        {teamDetailRows.map(({ label, value }) => {
+          if (!value) {
+            return (
+              <Row>
+                <Col xs="10" className="bold">
+                  {label}
+                </Col>
+              </Row>
+            );
+          }
+          return (
+            <Row>
+              <Col xs="6">{label}</Col>
+              <Col xs="6">{value}</Col>
+            </Row>
+          );
+        })}
       </Offcanvas.Body>
     </Offcanvas>
   );

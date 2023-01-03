@@ -6,7 +6,7 @@ import SideDrawer from "../SideDrawer/SideDrawer";
 const TEAMS_API_URL = "https://www.balldontlie.io/api/v1/teams";
 const GAMES_API_URL = "https://www.balldontlie.io/api/v1/games";
 
-function DataTable({ searchQuery }) {
+function DataTable({ searchQuery, setIsLoading }) {
   const [teams, setTeams] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,15 +20,18 @@ function DataTable({ searchQuery }) {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(
           `${TEAMS_API_URL}?page=${currentPage}&per_page=${teamsPerPage}`
         );
         const data = await response.json();
         setTeams(data.data);
         setTotalPages(data.meta.total_pages);
+        setIsLoading(false);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
+        setIsLoading(false);
       }
     };
     fetchTeams();
@@ -37,6 +40,7 @@ function DataTable({ searchQuery }) {
   useEffect(() => {
     const fetchTeamGame = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(
           `${GAMES_API_URL}?team_ids[]=${selectedTeamId}&seasons[]=2021`
         );
@@ -45,9 +49,11 @@ function DataTable({ searchQuery }) {
           ...data.data[Math.floor(Math.random() * data.data.length)],
           total_games: data.meta.total_count,
         });
+        setIsLoading(false);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
+        setIsLoading(false);
       }
     };
 
@@ -110,6 +116,28 @@ function DataTable({ searchQuery }) {
     }
   };
 
+  const renderArrow = () => (
+    <span>
+      {sortDirection === "asc" ? (
+        <img
+          src="ArrowUpSolid.svg"
+          alt="arrow-up"
+          width="20px"
+          height="20px"
+          className="arrow"
+        />
+      ) : (
+        <img
+          src="ArrowDownSolid.svg"
+          alt="arrow-down"
+          width="20px"
+          height="20px"
+          className="arrow"
+        />
+      )}
+    </span>
+  );
+
   return (
     <Col className="mt-5" xs="10" md="10">
       <Table hover borderless responsive className="table">
@@ -117,94 +145,20 @@ function DataTable({ searchQuery }) {
           <tr>
             <th onClick={() => handleSort("name")}>
               Team Name
-              {sortBy === "name" && (
-                <span>
-                  {sortDirection === "asc" ? (
-                    <img
-                      src="ArrowUpSolid.svg"
-                      alt="arrow-up"
-                      width="20px"
-                      height="20px"
-                      className="arrow"
-                    />
-                  ) : (
-                    <img
-                      src="ArrowDownSolid.svg"
-                      alt="arrow-down"
-                      width="20px"
-                      height="20px"
-                      className="arrow"
-                    />
-                  )}
-                </span>
-              )}
+              {sortBy === "name" && renderArrow()}
             </th>
             <th onClick={() => handleSort("city")}>
               City
-              {sortBy === "city" && (
-                <span>
-                  {sortDirection === "asc" ? (
-                    <img
-                      src="ArrowUpSolid.svg"
-                      alt="arrow-up"
-                      width="20px"
-                      height="20px"
-                    />
-                  ) : (
-                    <img
-                      src="ArrowDownSolid.svg"
-                      alt="arrow-down"
-                      width="20px"
-                      height="20px"
-                    />
-                  )}
-                </span>
-              )}
+              {sortBy === "city" && renderArrow()}
             </th>
             <th>Abbreviation</th>
             <th onClick={() => handleSort("conference")}>
               Conference
-              {sortBy === "conference" && (
-                <span>
-                  {sortDirection === "asc" ? (
-                    <img
-                      src="ArrowUpSolid.svg"
-                      alt="arrow-up"
-                      width="20px"
-                      height="20px"
-                    />
-                  ) : (
-                    <img
-                      src="ArrowDownSolid.svg"
-                      alt="arrow-down"
-                      width="20px"
-                      height="20px"
-                    />
-                  )}
-                </span>
-              )}
+              {sortBy === "conference" && renderArrow()}
             </th>
             <th onClick={() => handleSort("division")}>
               Division
-              {sortBy === "division" && (
-                <span>
-                  {sortDirection === "asc" ? (
-                    <img
-                      src="ArrowUpSolid.svg"
-                      alt="arrow-up"
-                      width="20px"
-                      height="20px"
-                    />
-                  ) : (
-                    <img
-                      src="ArrowDownSolid.svg"
-                      alt="arrow-down"
-                      width="20px"
-                      height="20px"
-                    />
-                  )}
-                </span>
-              )}
+              {sortBy === "division" && renderArrow()}
             </th>
           </tr>
         </thead>
